@@ -15,18 +15,18 @@ function insertGroup()
 {
     $request = \Slim\Slim::getInstance()->request();
     $group = json_decode($request->getBody());
-    $sql = "INSERT INTO group (idGroup, GroupName, adressEmail ) VALUES (:idGroup, :userGroup, :adressEmail)";
+    $sql = "INSERT INTO groupe (idGroup, GroupName, adressEmail ) VALUES (:idGroup, :GroupName, :adressEmail)";
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("idGroup", $group->idUser);
-        $stmt->bindParam("userGroup", $group->userGroup);
+        $stmt->bindParam("idGroup", $group->idGroup);
+        $stmt->bindParam("GroupName", $group->GroupName);
         $stmt->bindParam("adressEmail",$group->adressEmail);
         $stmt->execute();
         $group->id = $db->lastInsertId();
         $db = null;
         $group_id= $group->idGroup;
-        getUserById($group_id);
+        getGroupById($group_id);
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
@@ -35,13 +35,13 @@ function insertGroup()
 /***** READ *****/
 function getGroup() 
 {
-    $sql = "SELECT * FROM group";
+    $sql = "SELECT * FROM groupe";
     try {
         $db = getDB();
         $stmt = $db->query($sql);
         $groups = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
-        echo '{"users": ' . json_encode($groups) . '}';
+        echo '{"group": ' . json_encode($groups) . '}';
     } catch(PDOException $e) {
         //error_log($e->getMessage(), 3, '/var/tmp/php.log');
         echo '{"error":{"text":'. $e->getMessage() .'}}';
@@ -51,15 +51,15 @@ function getGroup()
 function getGroupById($idGroup) // TODO
 {
 
-    $sql = "SELECT * FROM users WHERE idGroup=:idGroup";
+    $sql = "SELECT * FROM groupe WHERE idGroup=:idGroup";
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("idGroup", $idGroup);
         $stmt->execute();
-        $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $group = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
-        echo '{"user": ' . json_encode($user) . '}';
+        echo '{"group": ' . json_encode($group) . '}';
 
     } catch(PDOException $e) {
         //error_log($e->getMessage(), 3, '/var/tmp/php.log');
@@ -72,30 +72,30 @@ function getGroupById($idGroup) // TODO
 function updateGroupById($idGroup)//TODO
 {
     $request = \Slim\Slim::getInstance()->request();
-    $user = json_decode($request->getBody());
+    $group = json_decode($request->getBody());
 
-    $sql = "UPDATE users SET userName=:userName, userAdressEmail=:userAdressEmail WHERE idGroup=".$idGroup;
+    $sql = "UPDATE groupe SET GroupName=:GroupName, adressEmail=:adressEmail WHERE idGroup=".$idGroup;
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("userName", $user->userName);
-        $stmt->bindParam("userAdressEmail",$user->userAdressEmail);
+        $stmt->bindParam("GroupName", $group->GroupName);
+        $stmt->bindParam("adressEmail",$group->adressEmail);
         $stmt->execute();
         $db = null;
-        getUserById($idGroup);
+        getGroupById($idGroup);
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
 }
 
 /***** DELETE *****/
-function deleteUserById($idUser) {
+function deleteGroupById($idGroup) {
 
-    $sql = "DELETE FROM users WHERE idGroup=:idGroup";
+    $sql = "DELETE FROM groupe WHERE idGroup=:idGroup";
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("idGroup", $idUser);
+        $stmt->bindParam("idGroup", $idGroup);
         $stmt->execute();
         $db = null;
         echo true;
