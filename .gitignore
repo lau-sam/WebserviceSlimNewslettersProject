@@ -7,3 +7,6 @@ api/script/
 
 # ignore db file with connection strings
 db.php
+
+# ignore 
+.idea/
