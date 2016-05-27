@@ -10,7 +10,7 @@ $app->post('/groups/update/:idGroup','updateGroupById');
 /*delete*/
 $app->delete('/groups/delete/:idGroup','deleteGroupById');
 
-/***** CREATE *****/
+/***** CREATE *****/        
 function insertGroup()
 {
     $request = \Slim\Slim::getInstance()->request();
