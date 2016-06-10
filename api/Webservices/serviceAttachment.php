@@ -15,18 +15,15 @@ function insertattachment()
 {
     $request = \Slim\Slim::getInstance()->request();
     $attachment = json_decode($request->getBody());
-    $sql = "INSERT INTO attachment (idattachment, attachmentName, adressEmail ) VALUES (:idattachment, :attachmentName, :adressEmail)";
+    $sql = "INSERT INTO attachment (name, serverPath ) VALUES (:name, :serverPath)";
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("idattachment", $attachment->idattachment);
-        $stmt->bindParam("attachmentName", $attachment->attachmentName);
-        $stmt->bindParam("adressEmail",$attachment->adressEmail);
+        $stmt->bindParam("name", $attachment->name);
+        $stmt->bindParam("serverPath",$attachment->serverPath);
         $stmt->execute();
         $attachment->id = $db->lastInsertId();
         $db = null;
-        $attachment_id= $attachment->idattachment;
-        getattachmentById($attachment_id);
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
@@ -74,12 +71,12 @@ function updateattachmentById($idattachment)//TODO
     $request = \Slim\Slim::getInstance()->request();
     $attachment = json_decode($request->getBody());
 
-    $sql = "UPDATE attachment SET attachmentName=:attachmentName, adressEmail=:adressEmail WHERE idattachment=".$idattachment;
+    $sql = "UPDATE attachment SET name=:name, serverPath=:serverPath WHERE idattachment=".$idattachment;
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("attachmentName", $attachment->attachmentName);
-        $stmt->bindParam("adressEmail",$attachment->adressEmail);
+        $stmt->bindParam("name", $attachment->name);
+        $stmt->bindParam("serverPath",$attachment->serverPath);
         $stmt->execute();
         $db = null;
         getattachmentById($idattachment);
