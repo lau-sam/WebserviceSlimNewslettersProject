@@ -50,7 +50,7 @@ function insertnewsletter()
 
 
 
-    $sql = "INSERT INTO concat_statususernewsletter (idNewsletter,idUser, idstatus) VALUES (".$newsletterID.", :idUser ,"."$statusID".")";
+    $sql = "INSERT INTO concat_statususernewsletter (idNewsletter,idUser, idstatus,idGroup) VALUES (".$newsletterID.", 1 ,"."$statusID".",:idUser)";
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
