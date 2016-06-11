@@ -15,23 +15,37 @@ function insertGroup()
 {
     $request = \Slim\Slim::getInstance()->request();
     $group = json_decode($request->getBody());
-    $sql = "INSERT INTO groupe (idGroup, GroupName, adressEmail ) VALUES (:idGroup, :GroupName, :adressEmail)";
+    $sql = "INSERT INTO groupe ( GroupName, adressEmail ) VALUES ( :GroupName, :adressEmail)";
     try {
         $db = getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam("idGroup", $group->idGroup);
         $stmt->bindParam("GroupName", $group->GroupName);
         $stmt->bindParam("adressEmail",$group->adressEmail);
         $stmt->execute();
-        $group->id = $db->lastInsertId();
         $db = null;
-        $group_id= $group->idGroup;
-        getGroupById($group_id);
+        return  getLastID();
     } catch(PDOException $e) {
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
 }
 
+function getLastID()
+{
+    $request = \Slim\Slim::getInstance()->request();
+    $group = json_decode($request->getBody());
+    $sql = "select MAX(idgroup) from groupe";
+    try {
+        $db = getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $group = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        return  $group ;
+    } catch(PDOException $e) {
+        echo '{"error":{"text":'. $e->getMessage() .'}}';
+    }
+
+}
 /***** READ *****/
 function getGroups()
 {
