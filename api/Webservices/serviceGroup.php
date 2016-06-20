@@ -4,6 +4,7 @@
 $app->post('/groups','insertGroup');
 /*read*/
 $app->get('/groups','getGroups');
+$app->get('/groups/status/:idGroup','getStatusGroupBy');
 
 $app->get('/groups/max','getLastID');
 
@@ -94,6 +95,7 @@ function getLastID()
 function getGroupById($idGroup) // TODO
 {
 
+
     $sql = "SELECT * FROM groupe WHERE idGroup=:idGroup";
     try {
         $db = getDB();
@@ -147,4 +149,25 @@ function deleteGroupById($idGroup) {
     }
 
 }
+
+function getStatusGroupBy($idGroup) // TODO
+{
+    $sql = "SELECT * FROM concat_statususernewsletter WHERE idNewsletter=:idGroup";
+    try {
+        $db = getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam("idGroup", $idGroup);
+        $stmt->execute();
+        $group = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+
+        echo '{"concatStatus": ' . json_encode($group) . '}';
+
+    } catch(PDOException $e) {
+        //error_log($e->getMessage(), 3, '/var/tmp/php.log');
+        echo '{"error":{"text":'. $e->getMessage() .'}}';
+    }
+}
+
+
 ?>

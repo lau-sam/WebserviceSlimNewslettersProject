@@ -17,6 +17,7 @@ function insertnewsletter()
     $newsletterID=0;
     $request = \Slim\Slim::getInstance()->request();
     $newsletter = json_decode($request->getBody());
+
     $sql = "INSERT INTO newsletter (CampagneName, HtmlBody ) VALUES (:CampagneName, :HtmlBody)";
     try {
         $db = getDB();
@@ -48,22 +49,28 @@ function insertnewsletter()
     }
 
 
+$jsonData =  json_decode(file_get_contents("http://localhost:8080/WebserviceSlimNewslettersProject/api/groups/users/".$newsletter->idUser,true));
+$arrayOfGroup =  array();
 
-
-    $sql = "INSERT INTO concat_statususernewsletter (idNewsletter,idUser, idstatus,idGroup) VALUES (".$newsletterID.", 1 ,"."$statusID".",:idUser)";
+foreach($jsonData->group as $mydata) {
+    $sql = "INSERT INTO concat_statususernewsletter (idNewsletter,idUser, idstatus,idGroup) VALUES (".$newsletterID.",  $mydata->iduser ,"."$statusID".",:idUser)";
     try {
-        var_dump($newsletter);  
+        var_dump($newsletter);
         $db = getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("idUser", $newsletter->idUser);
         $stmt->execute();
-        $newsletter->id = $db->lastInsertId();
+      //  $newsletter->id = $db->lastInsertId();
         $db = null;
        // $newsletter_id= $newsletter->idnewsletter;
        // getnewsletterById($newsletter_id);
     } catch(PDOException $e) {
         echo '{"error_Concat_statusUserNewsletter":{"text":'. $e->getMessage() .'}}';
     }
+}
+
+
+    //var_dump($arrayOfGroup);
 }
 
 /***** READ *****/
