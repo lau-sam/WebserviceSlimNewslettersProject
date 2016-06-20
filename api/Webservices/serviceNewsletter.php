@@ -52,6 +52,7 @@ function insertnewsletter()
 
     $sql = "INSERT INTO concat_statususernewsletter (idNewsletter,idUser, idstatus,idGroup) VALUES (".$newsletterID.", 1 ,"."$statusID".",:idUser)";
     try {
+        var_dump($newsletter);  
         $db = getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("idUser", $newsletter->idUser);
@@ -61,7 +62,7 @@ function insertnewsletter()
        // $newsletter_id= $newsletter->idnewsletter;
        // getnewsletterById($newsletter_id);
     } catch(PDOException $e) {
-        echo '{"error":{"text":'. $e->getMessage() .'}}';
+        echo '{"error_Concat_statusUserNewsletter":{"text":'. $e->getMessage() .'}}';
     }
 }
 
