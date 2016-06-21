@@ -5,6 +5,8 @@
 	/*read*/
 	$app->get('/users','getUsers');
 	$app->get('/users/:idUser','getUserById');
+	$app->get('/users/status/:idstatus','getUserByIdStatus');
+
 	/*update*/
 	$app->post('/users/update/:idUser','updateUserById');
 	/*delete*/
@@ -100,4 +102,22 @@
 		}
 
 	}
+
+function getUserByIdStatus($idstatus){
+
+	$sql = "SELECT * FROM concat_statususernewsletter WHERE idstatus=:idstatus";
+	try {
+		$db = getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->bindParam("idstatus", $idstatus);
+		$stmt->execute();
+		$user = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$db = null;
+		echo '{"concat_statususernewsletter": ' . json_encode($user) . '}';
+
+	} catch(PDOException $e) {
+		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+		echo '{"error":{"text":'. $e->getMessage() .'}}';
+	}
+}
 ?>

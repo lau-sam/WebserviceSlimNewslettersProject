@@ -34,6 +34,13 @@ function insertnewsletter()
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
 
+
+
+$jsonData =  json_decode(file_get_contents("http://localhost:8080/WebserviceSlimNewslettersProject/api/groups/users/".$newsletter->idUser,true));
+$arrayOfGroup =  array();
+
+foreach($jsonData->group as $mydata) {
+
     $sql = "INSERT INTO status(DesignationStatus) VALUES ('TBD')";
     try {
         $db = getDB();
@@ -48,11 +55,6 @@ function insertnewsletter()
         echo '{"error":{"text":'. $e->getMessage() .'}}';
     }
 
-
-$jsonData =  json_decode(file_get_contents("http://localhost:8080/WebserviceSlimNewslettersProject/api/groups/users/".$newsletter->idUser,true));
-$arrayOfGroup =  array();
-
-foreach($jsonData->group as $mydata) {
     $sql = "INSERT INTO concat_statususernewsletter (idNewsletter,idUser, idstatus,idGroup) VALUES (".$newsletterID.",  $mydata->iduser ,"."$statusID".",:idUser)";
     try {
         var_dump($newsletter);
