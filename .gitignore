@@ -2,7 +2,7 @@
 .git/
 
 # ignore slim framework
-api/Slim/
+# api/Slim/
 api/script/
 
 # ignore db file with connection strings
